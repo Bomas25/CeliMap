@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SafeEat – Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F2ED;
+  --surface: #FDFCFA;
+  --surface2: #F0EDE7;
+  --border: #E2DDD6;
+  --border2: #CCC8C0;
+  --text: #1A1916;
+  --text2: #6B6760;
+  --text3: #A09C96;
+  --green: #2A6B4A;
+  --green-light: #E8F3ED;
+  --green-mid: #4CAF7A;
+  --amber: #B5630A;
+  --amber-light: #FDF0E3;
+  --red: #C0392B;
+  --red-light: #FDECEA;
+  --blue: #1A4F7A;
+  --blue-light: #E8F0F8;
+  --accent: #2A6B4A;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.07);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+}
+
+/* ── Top bar ── */
+.top-bar {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green-mid); }
+.top-note { font-size: 12px; color: var(--text3); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; }
+
+/* ── Layout ── */
+.stage {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ── Phone Frame ── */
+.phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.phone-label { font-size: 11px; color: var(--text3); letter-spacing: .05em; }
+.phone-label strong { color: var(--text2); font-weight: 500; }
+
+.phone {
+  width: 280px;
+  height: 570px;
+  background: var(--surface);
+  border-radius: 36px;
+  border: 2px solid var(--border2);
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(255,255,255,.8);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+.phone-notch {
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 80px; height: 5px;
+  background: var(--border2);
+  border-radius: 3px;
+  z-index: 10;
+}
+.phone-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ── Status Bar ── */
+.status-bar {
+  padding: 22px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text2);
+  flex-shrink: 0;
+}
+
+/* ── Screens ── */
+.screen { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ── SCREEN 1: Splash ── */
+.splash {
+  background: var(--green);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 28px;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+.splash::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.splash::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+.splash-icon {
+  width: 72px; height: 72px;
+  background: rgba(255,255,255,.15);
+  border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin-bottom: 24px;
+  border: 1.5px solid rgba(255,255,255,.25);
+}
+.splash h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  color: #fff;
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+.splash p {
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+.btn-primary {
+  width: 100%;
+  background: #fff;
+  color: var(--green);
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: transform .12s, opacity .12s;
+}
+.btn-primary:active { transform: scale(.97); opacity: .9; }
+.btn-ghost {
+  background: transparent;
+  color: rgba(255,255,255,.8);
+  border: 1.5px solid rgba(255,255,255,.3);
+  border-radius: 14px;
+  padding: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  width: 100%;
+  transition: background .15s;
+}
+.btn-ghost:hover { background: rgba(255,255,255,.08); }
+
+/* ── SCREEN 2: Onboarding ── */
+.onboard-header {
+  padding: 16px 20px 0;
+  flex-shrink: 0;
+}
+.progress-bar {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 2px;
+  transition: width .3s ease;
+}
+.onboard-body { padding: 0 20px 16px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+.onboard-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); line-height: 1.2; margin-bottom: 4px; }
+.onboard-sub { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.choice-item {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.choice-item.selected { border-color: var(--green); background: var(--green-light); }
+.choice-check {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.choice-item.selected .choice-check { background: var(--green); border-color: var(--green); }
+.choice-check svg { display: none; }
+.choice-item.selected .choice-check svg { display: block; }
+.choice-text { flex: 1; }
+.choice-name { font-size: 13px; font-weight: 500; color: var(--text); }
+.choice-desc { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.onboard-footer { padding: 12px 20px 20px; flex-shrink: 0; }
+.btn-green {
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s, opacity .12s;
+}
+.btn-green:active { transform: scale(.97); }
+
+/* ── SCREEN 3: Home / Karte ── */
+.home-header {
+  padding: 10px 20px 12px;
+  flex-shrink: 0;
+}
+.home-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.home-logo { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); }
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--green-light);
+  border: 1.5px solid var(--green-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: var(--green);
+}
+.search-bar {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text3);
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.search-icon { font-size: 14px; }
+.chips-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.chips-row::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 11px;
+  font-size: 11px;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: all .15s;
+}
+.chip.active { background: var(--green); border-color: var(--green); color: #fff; }
+.chip.active2 { background: var(--green-light); border-color: var(--green); color: var(--green); }
+
+.map-area {
+  flex: 1;
+  background: linear-gradient(135deg, #D4E8D4 0%, #C8DFC8 40%, #BFCFBF 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+}
+.map-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.15) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.map-road-h {
+  position: absolute;
+  height: 6px;
+  background: rgba(255,255,255,.6);
+  border-radius: 3px;
+}
+.map-road-v {
+  position: absolute;
+  width: 6px;
+  background: rgba(255,255,255,.6);
+  border-radius: 3px;
+}
+.map-block {
+  position: absolute;
+  background: rgba(180,200,180,.5);
+  border-radius: 4px;
+}
+.map-pin {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  z-index: 5;
+}
+.pin-bubble {
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  transition: all .15s;
+}
+.pin-bubble.green { background: var(--green); border-color: var(--green); color: #fff; }
+.pin-bubble.amber { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+.pin-tail {
+  width: 2px; height: 6px;
+  background: var(--border2);
+}
+.pin-bubble.green + .pin-tail { background: var(--green); }
+
+.map-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 12px 14px;
+  background: linear-gradient(transparent, rgba(245,242,237,.95));
+}
+.map-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.map-card-img {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: var(--green-light);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.map-card-info { flex: 1; min-width: 0; }
+.map-card-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.map-card-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.map-card-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.badge {
+  font-size: 10px;
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-weight: 500;
+}
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+.badge-red { background: var(--red-light); color: var(--red); }
+.stars { font-size: 11px; color: var(--amber); }
+
+/* ── SCREEN 4: Liste ── */
+.list-header {
+  padding: 10px 20px 0;
+  flex-shrink: 0;
+}
+.back-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.back-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text2);
+}
+.list-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.list-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; margin-bottom: 4px; }
+.filter-tabs::-webkit-scrollbar { display: none; }
+.ftab {
+  flex-shrink: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all .15s;
+}
+.ftab.on { background: var(--text); color: #fff; border-color: var(--text); }
+.list-body { flex: 1; overflow-y: auto; padding: 4px 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.rest-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color .15s, box-shadow .15s;
+}
+.rest-card:hover { border-color: var(--border2); box-shadow: var(--shadow); }
+.rest-img {
+  width: 52px; height: 52px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+}
+.rest-info { flex: 1; min-width: 0; }
+.rest-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.rest-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
+.rest-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
+.rest-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+.dist { font-size: 11px; color: var(--text3); }
+.safe-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.safe-dot.g { background: var(--green-mid); }
+.safe-dot.a { background: #F0A030; }
+.safe-dot.r { background: var(--red); }
+
+/* ── SCREEN 5: Detail ── */
+.detail-img {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, #C8E6C9, #A5D6A7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px;
+  flex-shrink: 0;
+  position: relative;
+}
+.detail-back {
+  position: absolute;
+  top: 16px; left: 16px;
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.85);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  backdrop-filter: blur(4px);
+}
+.detail-save {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,.85);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+.detail-body { flex: 1; overflow-y: auto; padding: 0 0 16px; }
+.detail-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); }
+.detail-name { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); }
+.detail-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.detail-badges { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
+.safety-block {
+  margin: 12px 16px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.safety-row {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.safety-row:last-child { border-bottom: none; }
+.safety-icon { font-size: 14px; width: 22px; text-align: center; }
+.safety-info { flex: 1; }
+.safety-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.safety-desc { font-size: 10px; color: var(--text2); margin-top: 1px; }
+.safety-status { font-size: 10px; font-weight: 600; border-radius: 5px; padding: 2px 7px; }
+.ok { background: var(--green-light); color: var(--green); }
+.warn { background: var(--amber-light); color: var(--amber); }
+.bad { background: var(--red-light); color: var(--red); }
+
+.section-title { padding: 12px 16px 6px; font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; }
+.menu-item {
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-name { font-size: 13px; color: var(--text); }
+.menu-tags { display: flex; gap: 4px; }
+.review-item {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.review-top { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.reviewer-av {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600;
+}
+.reviewer-name { font-size: 12px; font-weight: 500; color: var(--text); }
+.review-text { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.detail-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.btn-route {
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ── Nav ── */
+.bottom-nav {
+  padding: 8px 10px 16px;
+  display: flex;
+  justify-content: space-around;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer;
+  flex: 1;
+  padding: 2px 0;
+  transition: color .15s;
+}
+.nav-icon { font-size: 18px; }
+.nav-label { font-size: 9px; font-weight: 500; color: var(--text3); }
+.nav-item.active .nav-label { color: var(--green); }
+
+/* ── Connector arrows ── */
+.arrow-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-top: 40px;
+  flex-shrink: 0;
+}
+.arrow-line {
+  width: 28px; height: 1px;
+  background: var(--border2);
+  position: relative;
+}
+.arrow-line::after {
+  content: '›';
+  position: absolute;
+  right: -8px; top: -9px;
+  font-size: 16px;
+  color: var(--border2);
+}
+.arrow-note {
+  font-size: 10px;
+  color: var(--text3);
+  text-align: center;
+  max-width: 60px;
+  line-height: 1.3;
+}
+
+/* ── Flow labels ── */
+.flow-label {
+  width: 100%;
+  max-width: 1100px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.flow-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── Scroll ── */
+.list-body::-webkit-scrollbar,
+.detail-body::-webkit-scrollbar,
+.onboard-body::-webkit-scrollbar { display: none; }
+
+/* ── Animation ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.phone { animation: fadeUp .4s ease both; }
+.phone:nth-child(1) { animation-delay: .05s; }
+.phone:nth-child(3) { animation-delay: .10s; }
+.phone:nth-child(5) { animation-delay: .15s; }
+.phone:nth-child(7) { animation-delay: .20s; }
+.phone:nth-child(9) { animation-delay: .25s; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo"><div class="logo-dot"></div> SafeEat</div>
+  <div class="top-note">Hi-Fi Prototype · Kern-Features</div>
+</div>
+
+<!-- ═══ FLOW 1: Onboarding ═══ -->
+<div class="flow-label">Flow 1 — Onboarding</div>
+<div class="stage">
+
+  <!-- Screen 1: Splash -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="status-bar" style="color:rgba(255,255,255,.7);position:absolute;top:0;left:0;right:0;z-index:5;padding-top:18px">
+          <span>9:41</span><span>●●●</span>
+        </div>
+        <div class="splash">
+          <div class="splash-icon">🌿</div>
+          <h1>Essen ohne<br>Sorgen.</h1>
+          <p>Finde Restaurants, die wirklich zu deinen Bedürfnissen passen.</p>
+          <button class="btn-primary" onclick="goTo('onboard1')">Loslegen →</button>
+          <button class="btn-ghost">Ich habe schon ein Konto</button>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>1</strong> · Splash</div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-line"></div>
+    <div class="arrow-note">Tippe auf Loslegen</div>
+  </div>
+
+  <!-- Screen 2: Onboarding -->
+  <div class="phone-wrap" id="phone-onboard1">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="onboard-header">
+          <div class="progress-bar"><div class="progress-fill" style="width:33%"></div></div>
+        </div>
+        <div class="onboard-body">
+          <div>
+            <div class="onboard-title">Was verträgst<br>du nicht?</div>
+            <div class="onboard-sub" style="margin-top:6px">Wähle alle zutreffenden Optionen.</div>
+          </div>
+          <div class="choice-item selected" onclick="this.classList.toggle('selected')">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Gluten / Zöliakie</div>
+              <div class="choice-desc">Weizen, Roggen, Gerste, Hafer</div>
+            </div>
+            <span style="font-size:18px">🌾</span>
+          </div>
+          <div class="choice-item selected" onclick="this.classList.toggle('selected')">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Laktose</div>
+              <div class="choice-desc">Milch, Käse, Butter, Sahne</div>
+            </div>
+            <span style="font-size:18px">🥛</span>
+          </div>
+          <div class="choice-item" onclick="this.classList.toggle('selected')">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Nüsse</div>
+              <div class="choice-desc">Erdnüsse, Baumnüsse, Mandeln</div>
+            </div>
+            <span style="font-size:18px">🥜</span>
+          </div>
+          <div class="choice-item" onclick="this.classList.toggle('selected')">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Eier</div>
+              <div class="choice-desc">Alle Eigelbprodukte</div>
+            </div>
+            <span style="font-size:18px">🥚</span>
+          </div>
+        </div>
+        <div class="onboard-footer">
+          <button class="btn-green" onclick="goTo('onboard2')">Weiter →</button>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>2</strong> · Unverträglichkeit wählen</div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-line"></div>
+    <div class="arrow-note">Tippe auf Weiter</div>
+  </div>
+
+  <!-- Screen 3: Schweregrad -->
+  <div class="phone-wrap" id="phone-onboard2">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="onboard-header">
+          <div class="progress-bar"><div class="progress-fill" style="width:66%"></div></div>
+        </div>
+        <div class="onboard-body">
+          <div>
+            <div class="onboard-title">Wie streng<br>bei Gluten?</div>
+            <div class="onboard-sub" style="margin-top:6px">Das beeinflusst, welche Restaurants wir dir zeigen.</div>
+          </div>
+          <div class="choice-item selected" onclick="selectSeverity(this)">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Zöliakie (medizinisch)</div>
+              <div class="choice-desc">Kreuzverunreinigung ist kritisch</div>
+            </div>
+          </div>
+          <div class="choice-item" onclick="selectSeverity(this)">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Glutensensitivität</div>
+              <div class="choice-desc">Kleine Mengen meist tolerierbar</div>
+            </div>
+          </div>
+          <div class="choice-item" onclick="selectSeverity(this)">
+            <div class="choice-check">
+              <svg width="11" height="9" viewBox="0 0 11 9"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="choice-text">
+              <div class="choice-name">Lifestyle / bewusst</div>
+              <div class="choice-desc">Kein medizinischer Grund</div>
+            </div>
+          </div>
+          <div style="background:var(--green-light);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--green);line-height:1.5;border:1px solid rgba(42,107,74,.15)">
+            💡 Bei Zöliakie zeigen wir nur Restaurants mit separater GF-Küche oder streng gesicherten Prozessen.
+          </div>
+        </div>
+        <div class="onboard-footer">
+          <button class="btn-green" onclick="goTo('home')">Fertig & Restaurants entdecken →</button>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>3</strong> · Schweregrad</div>
+  </div>
+
+</div>
+
+<br>
+
+<!-- ═══ FLOW 2: Suche & Finden ═══ -->
+<div class="flow-label">Flow 2 — Suchen & Finden</div>
+<div class="stage">
+
+  <!-- Screen 4: Home / Karte -->
+  <div class="phone-wrap" id="phone-home">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="home-header">
+          <div class="home-top">
+            <div class="home-logo">SafeEat</div>
+            <div class="avatar">LA</div>
+          </div>
+          <div class="search-bar" onclick="goTo('list')">
+            <span class="search-icon">🔍</span>
+            <span>Restaurant suchen...</span>
+          </div>
+          <div class="chips-row">
+            <span class="chip active">GF + Laktosefrei</span>
+            <span class="chip active2">Dediziert GF</span>
+            <span class="chip">≤ 1 km</span>
+            <span class="chip">Jetzt offen</span>
+          </div>
+        </div>
+        <div class="map-area">
+          <div class="map-grid"></div>
+          <div class="map-road-h" style="top:35%;left:0;right:0"></div>
+          <div class="map-road-h" style="top:65%;left:0;right:0"></div>
+          <div class="map-road-v" style="left:30%;top:0;bottom:0"></div>
+          <div class="map-road-v" style="left:65%;top:0;bottom:0"></div>
+          <div class="map-block" style="top:10%;left:5%;width:22%;height:20%"></div>
+          <div class="map-block" style="top:10%;left:35%;width:25%;height:18%"></div>
+          <div class="map-block" style="top:45%;left:5%;width:20%;height:16%"></div>
+          <div class="map-block" style="top:45%;left:35%;width:22%;height:18%"></div>
+          <div class="map-block" style="top:10%;left:70%;width:20%;height:22%"></div>
+          <!-- You are here -->
+          <div style="position:absolute;top:48%;left:48%;transform:translate(-50%,-50%);z-index:6">
+            <div style="width:14px;height:14px;border-radius:50%;background:#1A4F7A;border:2.5px solid #fff;box-shadow:0 0 0 4px rgba(26,79,122,.2)"></div>
+          </div>
+          <!-- Pins -->
+          <div class="map-pin" style="left:28%;top:32%" onclick="goTo('detail')">
+            <div class="pin-bubble green">Grüner Teller</div>
+            <div class="pin-tail"></div>
+          </div>
+          <div class="map-pin" style="left:60%;top:28%">
+            <div class="pin-bubble">Pasta Nostra</div>
+            <div class="pin-tail" style="background:var(--border2)"></div>
+          </div>
+          <div class="map-pin" style="left:72%;top:55%">
+            <div class="pin-bubble amber">Café Rondo</div>
+            <div class="pin-tail" style="background:var(--amber)"></div>
+          </div>
+          <div class="map-bottom">
+            <div class="map-card" onclick="goTo('detail')">
+              <div class="map-card-img">🥗</div>
+              <div class="map-card-info">
+                <div class="map-card-name">Grüner Teller</div>
+                <div class="map-card-sub">Österreichisch · 0.3 km</div>
+                <div class="map-card-badges">
+                  <span class="badge badge-green">✓ Dediziert GF</span>
+                  <span class="badge badge-green">✓ Laktosefrei</span>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div class="stars">★★★★☆</div>
+                <div style="font-size:10px;color:var(--text3);margin-top:2px">82 Bew.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item active"><span class="nav-icon">🗺</span><span class="nav-label" style="color:var(--green)">Karte</span></div>
+          <div class="nav-item" onclick="goTo('list')"><span class="nav-icon">📋</span><span class="nav-label">Liste</span></div>
+          <div class="nav-item"><span class="nav-icon">🔖</span><span class="nav-label">Gespeichert</span></div>
+          <div class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>4</strong> · Home / Karte</div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-line"></div>
+    <div class="arrow-note">Tippe auf Liste</div>
+  </div>
+
+  <!-- Screen 5: Liste -->
+  <div class="phone-wrap" id="phone-list">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="list-header">
+          <div class="back-row">
+            <div class="back-btn" onclick="goTo('home')">‹</div>
+            <div>
+              <div class="list-title">Wien 1010 · GF + LF</div>
+              <div class="list-sub">14 Restaurants gefunden</div>
+            </div>
+          </div>
+          <div class="filter-tabs">
+            <span class="ftab on">Alle</span>
+            <span class="ftab" onclick="switchTab(this)">Dediziert GF</span>
+            <span class="ftab" onclick="switchTab(this)">GF + LF</span>
+            <span class="ftab" onclick="switchTab(this)">Jetzt offen</span>
+          </div>
+        </div>
+        <div class="list-body">
+          <div class="rest-card" onclick="goTo('detail')">
+            <div class="rest-img" style="background:var(--green-light)">🥗</div>
+            <div class="rest-info">
+              <div class="rest-name">Grüner Teller</div>
+              <div class="rest-meta">Österreichisch · <span class="stars">★★★★☆</span> (82)</div>
+              <div class="rest-badges">
+                <span class="badge badge-green">Dediziert GF</span>
+                <span class="badge badge-green">Laktosefrei</span>
+              </div>
+            </div>
+            <div class="rest-right">
+              <div class="dist">0.3 km</div>
+              <div class="safe-dot g"></div>
+            </div>
+          </div>
+          <div class="rest-card" onclick="goTo('detail')">
+            <div class="rest-img" style="background:#FFF3E0">🍝</div>
+            <div class="rest-info">
+              <div class="rest-name">Pasta Nostra</div>
+              <div class="rest-meta">Italienisch · <span class="stars">★★★★★</span> (41)</div>
+              <div class="rest-badges">
+                <span class="badge badge-green">GF Pasta</span>
+                <span class="badge badge-amber">Laktose möglich</span>
+              </div>
+            </div>
+            <div class="rest-right">
+              <div class="dist">0.6 km</div>
+              <div class="safe-dot a"></div>
+            </div>
+          </div>
+          <div class="rest-card" onclick="goTo('detail')">
+            <div class="rest-img" style="background:#E8F5E9">🌱</div>
+            <div class="rest-info">
+              <div class="rest-name">Green Bowl</div>
+              <div class="rest-meta">Vegan · <span class="stars">★★★★☆</span> (29)</div>
+              <div class="rest-badges">
+                <span class="badge badge-green">Dediziert GF</span>
+                <span class="badge badge-green">Vegan = LF</span>
+              </div>
+            </div>
+            <div class="rest-right">
+              <div class="dist">0.7 km</div>
+              <div class="safe-dot g"></div>
+            </div>
+          </div>
+          <div class="rest-card">
+            <div class="rest-img" style="background:#FFF8E1">☕</div>
+            <div class="rest-info">
+              <div class="rest-name">Café Rondo</div>
+              <div class="rest-meta">Café · <span class="stars">★★★☆☆</span> (17)</div>
+              <div class="rest-badges">
+                <span class="badge badge-amber">GF möglich</span>
+                <span class="badge badge-red">Kreuzverunr. möglich</span>
+              </div>
+            </div>
+            <div class="rest-right">
+              <div class="dist">0.9 km</div>
+              <div class="safe-dot r"></div>
+            </div>
+          </div>
+          <div class="rest-card">
+            <div class="rest-img" style="background:#FCE4EC">🥩</div>
+            <div class="rest-info">
+              <div class="rest-name">Zum Wirt</div>
+              <div class="rest-meta">Österreichisch · <span class="stars">★★★★☆</span> (55)</div>
+              <div class="rest-badges">
+                <span class="badge badge-green">GF Optionen</span>
+                <span class="badge badge-green">Laktosefrei</span>
+              </div>
+            </div>
+            <div class="rest-right">
+              <div class="dist">1.1 km</div>
+              <div class="safe-dot g"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item" onclick="goTo('home')"><span class="nav-icon">🗺</span><span class="nav-label">Karte</span></div>
+          <div class="nav-item active"><span class="nav-icon">📋</span><span class="nav-label" style="color:var(--green)">Liste</span></div>
+          <div class="nav-item"><span class="nav-icon">🔖</span><span class="nav-label">Gespeichert</span></div>
+          <div class="nav-item"><span class="nav-icon">👤</span><span class="nav-label">Profil</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>5</strong> · Suchergebnisse</div>
+  </div>
+
+  <div class="arrow-row">
+    <div class="arrow-line"></div>
+    <div class="arrow-note">Tippe auf Restaurant</div>
+  </div>
+
+  <!-- Screen 6: Detail -->
+  <div class="phone-wrap" id="phone-detail">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-content">
+        <div class="detail-img">
+          🥗
+          <div class="detail-back" onclick="goTo('list')">‹</div>
+          <div class="detail-save">🔖</div>
+        </div>
+        <div class="detail-body">
+          <div class="detail-head">
+            <div class="detail-name">Grüner Teller</div>
+            <div class="detail-meta">Österreichisch · 0.3 km · Di–So 11:30–22:00</div>
+            <div class="detail-badges">
+              <span class="badge badge-green">✓ Dediziert GF Küche</span>
+              <span class="badge badge-green">✓ Laktosefrei</span>
+              <span class="stars" style="font-size:12px">★★★★☆</span>
+            </div>
+          </div>
+
+          <div class="section-title">Dein Sicherheits-Check</div>
+          <div class="safety-block">
+            <div class="safety-row" style="background:var(--green-light)">
+              <div class="safety-icon">🌾</div>
+              <div class="safety-info">
+                <div class="safety-label">Gluten / Zöliakie</div>
+                <div class="safety-desc">Eigene GF Küche, separate Fritteuse</div>
+              </div>
+              <span class="safety-status ok">Sicher ✓</span>
+            </div>
+            <div class="safety-row" style="background:var(--green-light)">
+              <div class="safety-icon">🥛</div>
+              <div class="safety-info">
+                <div class="safety-label">Laktose</div>
+                <div class="safety-desc">Pflanzliche Alternativen verfügbar</div>
+              </div>
+              <span class="safety-status ok">Sicher ✓</span>
+            </div>
+          </div>
+
+          <div class="section-title">Menü-Highlights</div>
+          <div style="margin:0 0 4px">
+            <div class="menu-item">
+              <span class="menu-name">Wiener Schnitzel (GF)</span>
+              <div class="menu-tags">
+                <span class="badge badge-green">GF</span>
+                <span class="badge badge-green">LF</span>
+              </div>
+            </div>
+            <div class="menu-item">
+              <span class="menu-name">Linsensuppe</span>
+              <div class="menu-tags">
+                <span class="badge badge-green">GF</span>
+                <span class="badge badge-green">LF</span>
+              </div>
+            </div>
+            <div class="menu-item">
+              <span class="menu-name">Kaiserschmarrn</span>
+              <div class="menu-tags">
+                <span class="badge badge-amber">Hafer</span>
+              </div>
+            </div>
+            <div class="menu-item">
+              <span class="menu-name">Gulasch</span>
+              <div class="menu-tags">
+                <span class="badge badge-green">GF</span>
+                <span class="badge badge-green">LF</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Community-Bewertungen</div>
+          <div class="review-item">
+            <div class="review-top">
+              <div class="reviewer-av" style="background:var(--green-light);color:var(--green)">LM</div>
+              <div>
+                <div class="reviewer-name">Lisa M. · Zöliakie</div>
+                <div class="stars" style="font-size:11px">★★★★★</div>
+              </div>
+            </div>
+            <div class="review-text">"Personal super informiert, eigene GF Fritteuse! Endlich kann ich sorglos essen."</div>
+          </div>
+          <div class="review-item">
+            <div class="review-top">
+              <div class="reviewer-av" style="background:#FFF3E0;color:var(--amber)">TK</div>
+              <div>
+                <div class="reviewer-name">Thomas K. · GF + Laktose</div>
+                <div class="stars" style="font-size:11px">★★★★☆</div>
+              </div>
+            </div>
+            <div class="review-text">"Tolle Auswahl, Hafer-Kaiserschmarrn lieber meiden. Sonst alles super!"</div>
+          </div>
+        </div>
+        <div class="detail-footer">
+          <button class="btn-route">🗺 Route starten</button>
+        </div>
+      </div>
+    </div>
+    <div class="phone-label"><strong>6</strong> · Restaurant-Detail</div>
+  </div>
+
+</div>
+
+<script>
+function goTo(id) {
+  const map = {
+    'onboard1': 'phone-onboard1',
+    'onboard2': 'phone-onboard2',
+    'home':     'phone-home',
+    'list':     'phone-list',
+    'detail':   'phone-detail'
+  };
+  const el = document.getElementById(map[id]);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.querySelector('.phone').style.borderColor = 'var(--green-mid)';
+    setTimeout(() => el.querySelector('.phone').style.borderColor = '', 800);
+  }
+}
+function selectSeverity(el) {
+  el.closest('.onboard-body').querySelectorAll('.choice-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function switchTab(el) {
+  el.closest('.filter-tabs').querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+}
+</script>
+</body>
+</html>
